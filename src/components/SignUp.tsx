@@ -1,6 +1,7 @@
-import { Button, Form, Input, message, Space, InputNumber } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import api from '../utils/api';
+import { showError } from '../utils/notification'
 
 const layout = {
     labelCol: { span: 8 },
@@ -16,10 +17,6 @@ const validateMessages = {
     number: {
         range: '${label} must be between ${min} and ${max}',
     },
-};
-
-const showError = (errorMessage: string) => {
-    message.error(errorMessage);
 };
 
 const SignUp = () => {
