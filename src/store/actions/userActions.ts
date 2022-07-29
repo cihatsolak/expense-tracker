@@ -12,6 +12,7 @@ export const signIn = (credentials: SignInForm) => async (dispatch: UserDispatch
             type: "LOGIN_SUCCESS",
             payload: response.data
         });
+        localStorage.setItem('token', response.data.token);
     }
     catch (err) {
         dispatch({

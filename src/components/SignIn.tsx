@@ -1,27 +1,38 @@
 import { Button, Checkbox, Form, Input, Result } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import api from '../utils/api';
-import { showError } from '../utils/notification'
+import { signIn } from '../store/actions/userActions';
+import { SignInForm, UserDispatch } from '../types/user';
+import { showError, showSuccess } from '../utils/notification'
+import { AppState } from '../store';
+import { useEffect } from 'react';
 
 const SignIn = () => {
 
     const navigate = useNavigate();
     const location: any = useLocation();
+    const dispatch = useDispatch<UserDispatch>();
 
-    const onFinish = async (values: any) => {
-        console.log('Success:', values);
-        try {
-            await api.post('/users/login', values);
-            navigate('/');
-        } catch (err: any) {
-            showError(err.response.data.errorMessage);
+    const { data, loading, error } = useSelector((state: AppState) => state.user);
+
+    const onFinish = (values: SignInForm) => {
+        dispatch(signIn(values));
+    }
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if(token){
+            navigate('/')
         }
-    };
+    }, [data])
 
-    const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo);
-        showError(errorInfo);
-    };
+    useEffect(() => {
+        error && showError(error)
+    }, [error])
+
+    useEffect(() => {
+        data.username && showSuccess('You have successfully logged in!');
+    }, [data.username])
 
     return (
         <Form
@@ -30,7 +41,6 @@ const SignIn = () => {
             wrapperCol={{ span: 16 }}
             initialValues={{ remember: true }}
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
             autoComplete="off"
         >
             <h2 style={{ textAlign: 'center', marginBottom: 20 }}>Please Login</h2>

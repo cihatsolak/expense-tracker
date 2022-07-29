@@ -26,6 +26,8 @@ const userReducer = (state: UserState = defaultState, action: UserAction) => {
                 loading: false,
                 error: 'Login failed.'
             }
+        default:
+            return state;
     }
 }
 
