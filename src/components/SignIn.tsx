@@ -1,14 +1,26 @@
-import { Button, Checkbox, Form, Input } from 'antd';
-import React from 'react';
+import { Button, Checkbox, Form, Input, Result } from 'antd';
+import { useLocation, useNavigate } from 'react-router-dom';
+import api from '../utils/api';
 import { showError } from '../utils/notification'
 
 const SignIn = () => {
-    const onFinish = (values: any) => {
+
+    const navigate = useNavigate();
+    const location: any = useLocation();
+
+    const onFinish = async (values: any) => {
         console.log('Success:', values);
+        try {
+            await api.post('/users/login', values);
+            navigate('/');
+        } catch (err: any) {
+            showError(err.response.data.errorMessage);
+        }
     };
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
+        showError(errorInfo);
     };
 
     return (
@@ -21,6 +33,17 @@ const SignIn = () => {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
         >
+            <h2 style={{ textAlign: 'center', marginBottom: 20 }}>Please Login</h2>
+            {
+                location?.state?.newSignUp && (
+                    <Result
+                        status="success"
+                        title="Yo successfully signed up!"
+                        subTitle="Please login using your credentials"
+                    />
+                )
+            }
+
             <Form.Item
                 label="Username"
                 name="username"

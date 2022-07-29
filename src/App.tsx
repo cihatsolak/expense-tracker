@@ -1,5 +1,6 @@
 import { Breadcrumb, Layout, Menu } from 'antd';
 import { Route, Routes } from 'react-router-dom';
+import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 
 const { Header, Content, Footer } = Layout;
@@ -22,6 +23,7 @@ const App = () => {
       <Content className="site-layout" style={{ padding: '50px', marginTop: 64 }}>
         <Routes>
           <Route path="/register" element={<SignUp />} />
+          <Route path="/login" element={<SignIn />} />
         </Routes>
       </Content>
       <Footer style={{ textAlign: 'center' }}>

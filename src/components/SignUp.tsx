@@ -24,7 +24,7 @@ const SignUp = () => {
     const onFinish = async (values: any) => {
         try {
             await api.post("/users/register", values);
-            navigate('/login');
+            navigate('/login', { state: { newSignUp: true } });
         }
         catch (err: any) {
             console.log({ err });
