@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
 import './Login.module.css'
 import { Container, Typography, Button, FormControl, FilledInput, InputLabel } from '@mui/material'
-
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import { InputAdornment, IconButton } from '@mui/material'
 
 export default function Login() {
 
   const [formInputs, setFormInputs] = useState({
     email: '',
-    password: ''
+    password: '',
+    showPassword: false
   })
 
   const handleChange = (prop) => (event) => {
@@ -17,6 +20,13 @@ export default function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(formInputs);
+  }
+
+  const handleClickShowPassword = () => {
+    setFormInputs({
+      ...formInputs,
+      showPassword: !formInputs.showPassword
+    })
   }
 
   return (
@@ -38,9 +48,21 @@ export default function Login() {
           <InputLabel htmlFor="password">Password</InputLabel>
           <FilledInput
             id="password"
+            type={formInputs.showPassword ? 'text' : 'password'}
             label="password"
             value={formInputs.password}
             onChange={handleChange('password')}
+            endAdornment={
+              <InputAdornment position="end">
+                  <IconButton
+                  aria-label="toggle password"
+                  onClick={handleClickShowPassword}
+                  edge="end"
+                  >
+                  {formInputs.showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+              </InputAdornment>
+              }
           />
         </FormControl>
         <Button variant="outlined" type="submit" color="info" size="large" sx={{ mt: 5 }}>Login</Button>
