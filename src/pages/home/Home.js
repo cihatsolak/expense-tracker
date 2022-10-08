@@ -7,7 +7,7 @@ import { useAuthContext } from '../../hooks/useAuthContext'
 
 export default function Home() {
   const { user } = useAuthContext();
-  const { documents, errorMessage, loading } = useCollection('expense', ["uid", "==", user.uid]);
+  const { documents, errorMessage, loading } = useCollection('expense', ["uid", "==", user.uid], ["creationDate", "desc"]);
 
   return (
     <Container sx={{ mt: 8 }}>
