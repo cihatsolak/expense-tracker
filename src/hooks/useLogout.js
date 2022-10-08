@@ -1,9 +1,9 @@
-import React from 'react'
-import useAuthContext from './useAuthContext'
-import { signOut } from 'firebase/auth'
+import { useState } from 'react'
 import { auth } from '../firebase/config'
+import {signOut} from 'firebase/auth'
+import { useAuthContext } from './useAuthContext'
 
-export default function useLogout() {
+export const useLogout = () => {
     const { dispatch } = useAuthContext();
 
     const [errorMessage, setErrorMessage] = useState(null);

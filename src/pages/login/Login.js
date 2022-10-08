@@ -4,8 +4,10 @@ import { Container, Typography, Button, FormControl, FilledInput, InputLabel } f
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { InputAdornment, IconButton } from '@mui/material'
+import { useLogin } from '../../hooks/useLogin'
 
 export default function Login() {
+  const { login, errorMessage, loading } = useLogin();
 
   const [formInputs, setFormInputs] = useState({
     email: '',
@@ -17,9 +19,9 @@ export default function Login() {
     setFormInputs({ ...formInputs, [prop]: event.target.value })
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(formInputs);
+    await login(formInputs.email, formInputs.password);
   }
 
   const handleClickShowPassword = () => {
@@ -54,19 +56,24 @@ export default function Login() {
             onChange={handleChange('password')}
             endAdornment={
               <InputAdornment position="end">
-                  <IconButton
+                <IconButton
                   aria-label="toggle password"
                   onClick={handleClickShowPassword}
                   edge="end"
-                  >
+                >
                   {formInputs.showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
+                </IconButton>
               </InputAdornment>
-              }
+            }
           />
         </FormControl>
-        <Button variant="outlined" type="submit" color="info" size="large" sx={{ mt: 5 }}>Login</Button>
+       
+        {!loading &&  <Button variant="outlined" type="submit" color="info" size="large" sx={{ mt: 5 }}>Login</Button>}
+        {loading && <Button variant="outlined" disabled color="info" size="large" sx={{ mt: 5 }}>Loading</Button>}
+
+        {errorMessage && <p>{errorMessage}</p>}
       </form>
     </Container>
   )
 }
+ 
