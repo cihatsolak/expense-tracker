@@ -1,16 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { db } from '../firebase/config'
-import { collection, onSnapshot, snapshotEqual } from 'firebase/firestore'
+import { collection, onSnapshot, query, where } from 'firebase/firestore'
 
-export default function useCollection(collectionId) {
+export default function useCollection(collectionId, _query) {
     const [documents, setDocuments] = useState(null)
     const [errorMessage, setErrorMessage] = useState(null);
     const [loading, setLoading] = useState(null);
+
+    const q = useRef(_query).current;
 
     useEffect(() => {
         setLoading(true);
 
         let ref = collection(db, collectionId);
+        if (q) {
+            ref = query(ref, where(...q))
+        }
+
         const unSubscribe = onSnapshot(ref, snapshot => {
             let results = [];
             snapshot.docs.forEach(doc => {
@@ -27,7 +33,7 @@ export default function useCollection(collectionId) {
         })
 
         setLoading(false);
-        
+
         return () => unSubscribe();
     }, [collectionId])
 

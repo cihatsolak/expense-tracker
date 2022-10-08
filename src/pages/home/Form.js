@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Button, TextField, Typography } from '@mui/material';
 import { useFirestore } from '../../hooks/useFirestore'
-import { useAuthContext } from '../../hooks/useAuthContext'
 
-export default function Form() {
 
-    const { user } = useAuthContext();
+export default function Form({uid}) {
+
     const { addDocument, data } = useFirestore('expense');
     const [title, setTitle] = useState('')
     const [quantity, setQuantity] = useState('')
@@ -13,7 +12,7 @@ export default function Form() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        await addDocument({ uid: user.uid, title, quantity });
+        await addDocument({ uid, title, quantity });
     }
 
     useEffect(() => {
