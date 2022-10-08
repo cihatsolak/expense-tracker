@@ -1,16 +1,27 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, TextField, Typography } from '@mui/material';
+import { useFirestore } from '../../hooks/useFirestore'
+import { useAuthContext } from '../../hooks/useAuthContext'
 
 export default function Form() {
 
+    const { user } = useAuthContext();
+    const { addDocument, data } = useFirestore('expense');
     const [title, setTitle] = useState('')
     const [quantity, setQuantity] = useState('')
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = async (event) => {
+        event.preventDefault();
 
-        console.log({ title, quantity });
+        await addDocument({ uid: user.uid, title, quantity });
     }
+
+    useEffect(() => {
+        if (data.succeeded) {
+            setTitle('');
+            setQuantity('');
+        }
+    }, [data.succeeded]);
 
     return (
         <form noValidate autoComplete="off" onSubmit={handleSubmit}>

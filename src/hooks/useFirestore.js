@@ -37,7 +37,7 @@ const firestoreReducer = (state, action) => {
     }
 }
 
-export default function useFirestore(collectionId) {
+export function useFirestore(collectionId) {
     const [data, dispatch] = useReducer(firestoreReducer, initialData);
     const [cancel, setCancel] = useState(false)
 
@@ -54,7 +54,7 @@ export default function useFirestore(collectionId) {
                 ...document,
                 creationDate
             });
-            if (addedDocument) {
+            if (!addedDocument) {
                 throw new Error('An error occurred while adding the document.');
             }
 
