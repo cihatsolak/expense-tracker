@@ -1,6 +1,6 @@
 import { useEffect, useState, useReducer } from 'react'
 import { db } from '../firebase/config'
-import { collection } from 'firebase/firestore'
+import { collection, addDoc, deleteDoc, serverTimestamp } from 'firebase/firestore'
 
 const initialData = {
     document: null,
@@ -11,6 +11,27 @@ const initialData = {
 
 const firestoreReducer = (state, action) => {
     switch (action.type) {
+        case 'WAITING':
+            return {
+                document: null,
+                loading: true,
+                errorMessage: null,
+                succeeded: null
+            };
+        case 'DOCUMENT_ADDED':
+            return {
+                document: action.payload,
+                loading: false,
+                errorMessage: null,
+                succeeded: true
+            };
+        case 'ERROR':
+            return {
+                document: null,
+                loading: false,
+                errorMessage: action.payload,
+                succeeded: false
+            };
         default:
             return state
     }
@@ -23,7 +44,33 @@ export default function useFirestore(collectionId) {
     const ref = collection(db, collectionId);
 
     const addDocument = async (document) => {
+        dispatch({
+            type: 'WAITING'
+        })
 
+        try {
+            const creationDate = serverTimestamp();
+            const addedDocument = await addDoc(ref, {
+                ...document,
+                creationDate
+            });
+            if (addedDocument) {
+                throw new Error('An error occurred while adding the document.');
+            }
+
+            dispatch({
+                type: 'DOCUMENT_ADDED',
+                payload: addedDocument
+            })
+        }
+        catch (error) {
+            if (!cancel) {
+                dispatch({
+                    type: 'ERROR',
+                    payload: error.message
+                })
+            }
+        }
     }
 
     const deleteDocument = async (id) => {
