@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './Login.module.css'
 import { Container, Typography, Button, FormControl, FilledInput, InputLabel } from '@mui/material'
 import Visibility from '@mui/icons-material/Visibility'
@@ -7,6 +8,7 @@ import { InputAdornment, IconButton } from '@mui/material'
 import { useLogin } from '../../hooks/useLogin'
 
 export default function Login() {
+  const navigate = useNavigate();
   const { login, errorMessage, loading } = useLogin();
 
   const [formInputs, setFormInputs] = useState({
@@ -22,6 +24,7 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     await login(formInputs.email, formInputs.password);
+    navigate('/');
   }
 
   const handleClickShowPassword = () => {
@@ -67,8 +70,8 @@ export default function Login() {
             }
           />
         </FormControl>
-       
-        {!loading &&  <Button variant="outlined" type="submit" color="info" size="large" sx={{ mt: 5 }}>Login</Button>}
+
+        {!loading && <Button variant="outlined" type="submit" color="info" size="large" sx={{ mt: 5 }}>Login</Button>}
         {loading && <Button variant="outlined" disabled color="info" size="large" sx={{ mt: 5 }}>Loading</Button>}
 
         {errorMessage && <p>{errorMessage}</p>}
@@ -76,4 +79,3 @@ export default function Login() {
     </Container>
   )
 }
- 

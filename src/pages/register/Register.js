@@ -5,9 +5,10 @@ import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { InputAdornment, IconButton } from '@mui/material'
 import useRegister from '../../hooks/useRegister'
+import { useNavigate } from 'react-router-dom'
 
 export default function Register() {
-
+  const navigate = useNavigate();
   const { signUp, errorMessage, loading } = useRegister();
 
   const [formInputs, setFormInputs] = useState({
@@ -25,6 +26,7 @@ export default function Register() {
     event.preventDefault();
 
     await signUp(formInputs.email, formInputs.password, formInputs.username);
+    navigate('/');
   }
 
   const handleClickShowPassword = () => {
