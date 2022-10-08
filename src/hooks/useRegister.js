@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import { auth } from '../firebase/config'
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { useAuthContext } from './useAuthContext'
 
 export default function useRegister() {
+    const { dispatch } = useAuthContext();
+
     const [errorMessage, setErrorMessage] = useState(null);
     const [loading, setLoading] = useState(null);
 
@@ -17,6 +20,10 @@ export default function useRegister() {
             }
 
             await updateProfile(response.user, { displayName });
+            dispatch({
+                type: 'LOGIN',
+                payload: response.user
+            })
         }
         catch (error) {
             setErrorMessage(error.message);
