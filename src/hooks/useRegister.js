@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { auth } from '..firebase/config'
+import { useState } from 'react'
+import { auth } from '../firebase/config'
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 
 export default function useRegister() {
@@ -12,8 +12,6 @@ export default function useRegister() {
 
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password);
-            console.log(response.user);
-
             if (!response) {
                 throw new Error('An error occurred while registering.')
             }
@@ -21,8 +19,7 @@ export default function useRegister() {
             await updateProfile(response.user, { displayName });
         }
         catch (error) {
-            setErrorMessage(error.errorMessage);
-            console.error(error.errorMessage);
+            setErrorMessage(error.message);
         }
         finally {
             setLoading(false);

@@ -4,8 +4,11 @@ import { Container, Typography, Button, FormControl, OutlinedInput, InputLabel }
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { InputAdornment, IconButton } from '@mui/material'
+import useRegister from '../../hooks/useRegister'
 
 export default function Register() {
+
+  const { signUp, errorMessage, loading } = useRegister();
 
   const [formInputs, setFormInputs] = useState({
     email: '',
@@ -18,9 +21,10 @@ export default function Register() {
     setFormInputs({ ...formInputs, [prop]: event.target.value })
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(formInputs);
+
+    await signUp(formInputs.email, formInputs.password, formInputs.username);
   }
 
   const handleClickShowPassword = () => {
@@ -77,7 +81,10 @@ export default function Register() {
           />
         </FormControl>
 
-        <Button variant="outlined" type="submit" color="info" size="large" sx={{ mt: 5 }}>Login</Button>
+        {!loading && <Button variant="outlined" type="submit" color="info" size="large" sx={{ mt: 5 }}>Register</Button>}
+        {loading && <Button variant="outlined" disabled type="submit" color="info" size="large" sx={{ mt: 5 }}>Loading</Button>}
+
+        {errorMessage && <p>{errorMessage}</p>}
       </form>
     </Container>
   )
